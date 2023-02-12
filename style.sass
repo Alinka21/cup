@@ -1,0 +1,96 @@
+$primary: #81A291
+$cup: lighten($primary, 6.25%)
+$background: lighten($primary, 37.5%)
+$steam: lighten($primary, 62.5%)
+$steam-height: 6
+$gutter: 100vh / 36
+
+@function spacing($numbers...)
+  $result: ()
+
+  @each $i in $numbers
+    $result: append($result, ($gutter * $i))
+
+  @return $result
+
+*,
+*::before,
+*::after
+  box-sizing: border-box
+
+body
+  background-color: $background
+
+html,
+body,
+.grid
+  height: 100%
+
+.grid
+  display: grid
+  place-items: center
+
+.cup
+  background-color: $cup
+  transform: translateY(spacing($steam-height))
+  position: relative
+  display: grid
+  border-radius: spacing(2, 2, 6, 6)
+  height: spacing(9)
+  width: spacing(12)
+
+  &__handler
+    background-color: $background
+    transform: translate(62.5%, -18.75%)
+    position: absolute
+    place-self: center end
+    border-radius: spacing(4, 2, 4, 2.5)
+    border: spacing(0.5) solid $cup
+    border-left-width: spacing(1)
+    height: spacing(5)
+    width: spacing(5)
+  
+  &__steam
+    background-color: $steam
+    transform: translateY(spacing(-$steam-height - 3))
+    position: absolute
+    border-radius: spacing(5, 2.5)
+    height: spacing($steam-height)
+    place-self: start center
+    width: spacing(4)
+  
+  &__steam-flow
+    background-color: $background
+    animation: steam-flow 1s linear infinite
+    height: spacing(1)
+    top: 0
+    
+    &,
+    &::before,
+    &::after
+      position: absolute
+      right: 0
+      left: 0
+
+    &::before,
+    &::after
+      content: ''
+      height: spacing(1)
+    
+    &::before
+      transform: translateY(100%)
+      border-radius: spacing(0.5, 0.5, 0, 0)
+      bottom: 0
+      box-shadow: 0 spacing(-0.5) 0 0 $background
+    
+    &::after
+      transform: translateY(-100%)
+      border-radius: spacing(0, 0, 0.5, 0.5)
+      top: 0
+      box-shadow: 0 spacing(0.5) 0 0 $background
+
+@keyframes steam-flow
+  from
+    transform: translateY(spacing(1 + $steam-height))
+  to
+    transform: translateY(spacing(-1))
